@@ -10,5 +10,5 @@ def new_in_list(my_list, idx, element):
 
     # Replace the element at the specified index
     new_list[idx] = element
-
     return new_list
+
