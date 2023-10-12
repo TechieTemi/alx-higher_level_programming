@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 def square_matrix_simple(matrix=[]):
     # Get the length of the rows and columns in the matrix
     len_row = len(matrix)
