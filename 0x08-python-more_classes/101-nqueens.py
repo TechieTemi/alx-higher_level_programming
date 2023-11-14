@@ -1,152 +1,134 @@
 #!/usr/bin/python3
-"""
-The N queens puzzle is the challenge of placing N non-attacking queens
-on an N×N chessboard. Write a program that solves the N queens problem.
-
-Notes:
-    credit to geeks for geeks for the algo and explanation
-    https://www.geeksforgeeks.org/n-queen-problem-backtracking-3/
+"""Solves the N-queens puzzle.
+Determines all possible solutions to placing N
+N non-attacking queens on an NxN chessboard.
+Example:
+    $ ./101-nqueens.py N
+N must be an integer greater than or equal to 4.
+Attributes:
+    board (list): A list of lists representing the chessboard.
+    solutions (list): A list of lists containing solutions.
+Solutions are represented in the format [[r, c], [r, c], [r, c], [r, c]]
+where `r` and `c` represent the row and column, respectively, where a
+queen must be placed on the chessboard.
 """
 import sys
 
 
-if len(sys.argv) != 2:
-    print("Usage: nqueens N")
-    exit(1)
-try:
-    N = sys.argv[1]
-    N = int(N)
-except ValueError:
-    print("N must be a number")
-    exit(1)
-
-if N < 4:
-    print("N must be at least 4")
-    exit(1)
+def init_board(n):
+    """Initialize an `n`x`n` sized chessboard with 0's."""
+    board = []
+    [board.append([]) for i in range(n)]
+    [row.append(' ') for i in range(n) for row in board]
+    return (board)
 
 
-def generate_matrix(N):
-    """
-    Generates a square matrix with "." values.
+def board_deepcopy(board):
+    """Return a deepcopy of a chessboard."""
+    if isinstance(board, list):
+        return list(map(board_deepcopy, board))
+    return (board)
 
+
+def get_solution(board):
+    """Return the list of lists representation of a solved chessboard."""
+    solution = []
+    for r in range(len(board)):
+        for c in range(len(board)):
+            if board[r][c] == "Q":
+                solution.append([r, c])
+                break
+    return (solution)
+
+
+def xout(board, row, col):
+    """X out spots on a chessboard.
+    All spots where non-attacking queens can no
+    longer be played are X-ed out.
     Args:
-        N (int): The size of the square matrix.
+        board (list): The current working chessboard.
+        row (int): The row where a queen was last played.
+        col (int): The column where a queen was last played.
+    """
+    # X out all forward spots
+    for c in range(col + 1, len(board)):
+        board[row][c] = "x"
+    # X out all backwards spots
+    for c in range(col - 1, -1, -1):
+        board[row][c] = "x"
+    # X out all spots below
+    for r in range(row + 1, len(board)):
+        board[r][col] = "x"
+    # X out all spots above
+    for r in range(row - 1, -1, -1):
+        board[r][col] = "x"
+    # X out all spots diagonally down to the right
+    c = col + 1
+    for r in range(row + 1, len(board)):
+        if c >= len(board):
+            break
+        board[r][c] = "x"
+        c += 1
+    # X out all spots diagonally up to the left
+    c = col - 1
+    for r in range(row - 1, -1, -1):
+        if c < 0:
+            break
+        board[r][c]
+        c -= 1
+    # X out all spots diagonally up to the right
+    c = col + 1
+    for r in range(row - 1, -1, -1):
+        if c >= len(board):
+            break
+        board[r][c] = "x"
+        c += 1
+    # X out all spots diagonally down to the left
+    c = col - 1
+    for r in range(row + 1, len(board)):
+        if c < 0:
+            break
+        board[r][c] = "x"
+        c -= 1
 
+
+def recursive_solve(board, row, queens, solutions):
+    """Recursively solve an N-queens puzzle.
+    Args:
+        board (list): The current working chessboard.
+        row (int): The current working row.
+        queens (int): The current number of placed queens.
+        solutions (list): A list of lists of solutions.
     Returns:
-        list: A square matrix with dimensions `size x size`
-        filled with "." values.
+        solutions
     """
-    board = [["." for row in range(N)] for column in range(N)]
-    return board
+    if queens == len(board):
+        solutions.append(get_solution(board))
+        return (solutions)
 
+    for c in range(len(board)):
+        if board[row][c] == " ":
+            tmp_board = board_deepcopy(board)
+            tmp_board[row][c] = "Q"
+            xout(tmp_board, row, c)
+            solutions = recursive_solve(tmp_board, row + 1,
+                                        queens + 1, solutions)
 
-def create_list(board, N):
-    """
-    Creates a List from the Matrix
-
-    Args:
-        board: Matrix
-        N: N
-
-    Returns:
-        list: list of positions
-    """
-    matrix = []
-    for row in range(N):
-        for column in range(N):
-            if board[row][column] == "X":
-                matrix.append([row, column])
-    return matrix
-
-
-def add_to_results(board, results_list, N):
-    """
-    Add solution to results
-
-    Args:
-        board (list): board
-        results_list (list): list of results
-        N (int): N
-    """
-    temp = []
-    for row in range(N):
-        string = ""
-        for column in range(N):
-            string += board[row][column]
-        temp.append(string)
-    results_list.append(temp)
-
-
-def is_safe(row, column, board, N):
-    """
-    Checks If addition is safe
-
-    Args:
-        row (int): row
-        column (int): column
-        board (list): board
-        N (int): N
-
-    Returns:
-        bool: True if safe False if not
-    """
-    x = row
-    y = column
-
-    while x >= 0:
-        if board[x][y] == "X":
-            return False
-        else:
-            x -= 1
-
-    x = row
-    y = column
-    while (y < N and x >= 0):
-        if board[x][y] == "X":
-            return False
-        else:
-            y += 1
-            x -= 1
-
-    x = row
-    y = column
-    while (y >= 0 and x >= 0):
-        if board[x][y] == "X":
-            return False
-        else:
-            x -= 1
-            y -= 1
-    return True
-
-
-def NQueens(row, results_list, board, N):
-    """
-    Recursive function to solve NQueens
-
-    Args:
-        row (int): row
-        results_list (list): results_list
-        board (list): board
-        N (int): N
-    """
-    if row == N:
-        add_to_results(board, results_list, N)
-        return
-
-    for column in range(N):
-        if is_safe(row, column, board, N):
-            board[row][column] = "X"
-            NQueens(row + 1, results_list, board, N)
-            board[row][column] = "."
+    return (solutions)
 
 
 if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: nqueens N")
+        sys.exit(1)
+    if sys.argv[1].isdigit() is False:
+        print("N must be a number")
+        sys.exit(1)
+    if int(sys.argv[1]) < 4:
+        print("N must be at least 4")
+        sys.exit(1)
 
-    board = generate_matrix(N)
-
-    results_list = []
-    NQueens(0, results_list, board, N)
-
-    if len(results_list) != 0:
-        for result in results_list:
-            print(create_list(result, N))
+    board = init_board(int(sys.argv[1]))
+    solutions = recursive_solve(board, 0, 0, [])
+    for sol in solutions:
+        print(sol)
