@@ -8,8 +8,13 @@ An integer argument or float argument can also be passed to it."""
 
 
 def add_integer(a, b=98):
-    """
-    Takes two integer argument and return the sum
+    """Return the sum of two integers or floats as integers
+
+    Args:
+        a: first argument
+        b: second argument
+    Returns:
+        Sum of the two arguments
     """
     if ((not isinstance(a, int) and not isinstance(a, float))):
         raise TypeError("a must be an integer")
