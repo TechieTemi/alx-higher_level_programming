@@ -46,3 +46,4 @@ The two arguments can be a floating value
 The argument passed to the argument can be one float value
 >>> add_integer(5.6)
 103
+
