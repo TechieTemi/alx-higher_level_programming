@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 """Defines an integer addition function.
 It return the integer addition of a and b.
 It can also be an integer and a floating value.

@@ -1,13 +1,13 @@
 =========================================================
-This is a documentaion from the '0-add_integer.py' module
+This is a documentaion from the "0-add_integer.py" module
 =========================================================
 
-This module contain 'add_integer()', which we are going to use to perform some operations
+This module contain "add_integer()", which we are going to use to perform some operations
 
-'add_integer()' returns the sum of the argument passed to it using '+' operator.
+"add_integer" returns the sum of the argument passed to it using "+" operator.
 
 It can work with an integer values.
->>> add_integer = __import__('0-add_integer').add_integer
+>>> add_integer = __import__("0-add_integer").add_integer
 >>> add_integer(1, 3)
 4
 
