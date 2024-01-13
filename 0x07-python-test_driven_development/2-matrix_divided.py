@@ -17,7 +17,6 @@ def matrix_divided(matrix, div):
     """
     # Create a new list
     new_value = []
-    new_row = []
     # Check if the value is not integers or floats, otherwise raise a TypeError
     if not isinstance(matrix, list) or not all(
             isinstance(row, list) for row in matrix):
@@ -33,6 +32,7 @@ def matrix_divided(matrix, div):
 
     # Loop through the old list, in order to do the computing
     for row in matrix:
+        new_row = []
         for value in row:
             new_value.append(round(value / div, 2))
         new_row.append(row)
