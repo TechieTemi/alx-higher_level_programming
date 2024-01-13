@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 """ A function that divides all elements of a matrix"""
+
+
 def matrix_divided(matrix, div):
     """
     Args:
@@ -17,8 +19,11 @@ def matrix_divided(matrix, div):
     new_value = []
     new_row = []
     # Check if the value is not integers or floats, otherwise raise a TypeError
-    if not isinstance(matrix, list) or not all(isinstance(row, list) for row in matrix):
-        raise TypeError("matrix must be a matrix(list of lists) of integers/floats")
+    if not isinstance(matrix, list) or not all(
+            isinstance(row, list) for row in matrix):
+        raise TypeError(
+                "matrix must be a matrix(list of lists) of integers/floats"
+                )
     if not isinstance(div, (float, int)):
         raise TypeError("div must be a number")
     if not all(len(row) == len(matrix[0]) for row in matrix):
@@ -26,11 +31,9 @@ def matrix_divided(matrix, div):
     if div == 0:
         raise ZeroDivisionError("division by zero")
 
-    #Loop through the old list, in order to do the computing and later appending to the new list
+    # Loop through the old list, in order to do the computing
     for row in matrix:
         for value in row:
             new_value.append(round(value / div, 2))
         new_row.append(row)
     return new_value
-
-
